@@ -1,7 +1,3 @@
-<p align="center">
-	<img src="docs/banner.png" alt="badge rootedcon 2026 araintel" width="100%">
-</p>
-
 # badge_rootedcon2026_araintel
 
 <p align="center">
@@ -11,9 +7,64 @@
 	<img alt="Language" src="https://img.shields.io/badge/C%2B%2B-Embedded-6f42c1?style=for-the-badge">
 </p>
 
-<p align="center">
-	Badge basado en <strong>ESP32</strong> con pantalla <strong>ST7735</strong> y una app principal: <code>pwned_rootedcon_2026_araintel</code>.
-</p>
+```mermaid
+block-beta
+  columns 7
+
+  space:7
+  space:1 PCB["🟣  BADGE ROOTEDCON 2026  ·  araintel  ·  ESP32"]:5 space:1
+  space:7
+
+  space:1 TFT["🖥️ ST7735  128×160 px
+─────────────────
+MOSI    ←  GPIO 23
+SCLK    ←  GPIO 18
+CS      ←  GPIO  5
+DC      ←  GPIO 16
+RST     ←  GPIO  4
+BL      ←  GPIO 12
+SCREEN_EN← GPIO 21
+AUX_PWR ←  GPIO  0"]:2 space:1 BTNS["🎮 Botones  INPUT_PULLUP  activo LOW
+──────────────────────────────────
+▲  UP       ←  GPIO 27
+▼  DOWN     ←  GPIO 15
+◄  LEFT     ←  GPIO 25
+►  RIGHT    ←  GPIO 26
+●  SELECT   ←  GPIO 13
+◉  EXTRA    ←  GPIO 33"]:2 space:1
+
+  space:7
+
+  space:1 ESP["⚙️ ESP32  DOIT DEVKIT V1
+───────────────────────
+Xtensa LX6  240 MHz
+4 MB Flash
+WiFi 802.11 b/g/n  2.4 GHz
+USB Serial  115200 baud"]:2 space:1 HACK["⚡ HACK MENU
+──────────
+0 · WIFI CFG
+1 · WIFI SCAN
+2 · TWIN DET
+3 · EVILTWIN
+4 · WIFI DEAUTH
+5 · CIFRADOR
+6 · HASH
+7 · LOGS"]:2 space:1
+
+  space:7
+
+  classDef pcb fill:#3b0764,stroke:#a855f7,color:#f3e8ff,stroke-width:3px
+  classDef tft fill:#0c1a2e,stroke:#0ea5e9,color:#bae6fd,stroke-width:2px
+  classDef btn fill:#0f1f0f,stroke:#22c55e,color:#bbf7d0,stroke-width:2px
+  classDef esp fill:#0d1117,stroke:#58a6ff,color:#dbeafe,stroke-width:2px
+  classDef menu fill:#1a0533,stroke:#a855f7,color:#ede9fe,stroke-width:2px
+
+  class PCB pcb
+  class TFT tft
+  class BTNS btn
+  class ESP esp
+  class HACK menu
+```
 
 ---
 
@@ -285,54 +336,90 @@ Todos en `INPUT_PULLUP`, activos en `LOW`.
 
 ---
 
-## Diagrama de conexiones
+## Diagrama del badge
+
+Vista completa del hardware: el ESP32 como núcleo, la pantalla ST7735 conectada por SPI, los botones físicos, y el HACK MENU como capa software encima.
 
 ```mermaid
-graph LR
-    ESP32["ESP32"]
+graph TB
+    subgraph BADGE["🟣 PCB Badge RootedCON 2026"]
+        direction TB
 
-    subgraph TFT["Pantalla ST7735"]
-        MOSI["MOSI"]
-        SCLK["SCLK"]
-        CS["CS"]
-        DC["DC"]
-        RST["RST"]
-        BL["BL"]
-        SCREEN_EN["SCREEN_EN"]
-        AUX_POWER["AUX_POWER"]
+        subgraph CORE["⚙️ ESP32 DOIT DEVKIT V1"]
+            CPU["CPU 240MHz\nDual Core Xtensa LX6"]
+            FLASH["4MB Flash\nPlatformIO build"]
+            WIFI_HW["WiFi 802.11 b/g/n\n2.4GHz"]
+            USB["USB Serial\n115200 baud"]
+        end
+
+        subgraph DISPLAY["🖥️ Pantalla ST7735 · 128×160px"]
+            direction LR
+            MOSI["MOSI ← GPIO 23"]
+            SCLK["SCLK ← GPIO 18"]
+            CS["CS   ← GPIO  5"]
+            DC["DC   ← GPIO 16"]
+            RST["RST  ← GPIO  4"]
+            BL["BL   ← GPIO 12\n activo bajo"]
+            SCREN["SCREEN_EN ← GPIO 21"]
+            AUXP["AUX_PWR   ← GPIO  0"]
+        end
+
+        subgraph BUTTONS["🎮 Botones · INPUT_PULLUP · activo LOW"]
+            direction LR
+            BUP["▲ UP     GPIO 27"]
+            BDOWN["▼ DOWN   GPIO 15"]
+            BLEFT["◄ LEFT   GPIO 25"]
+            BRIGHT["► RIGHT  GPIO 26"]
+            BSEL["● SELECT GPIO 13"]
+            BEXT["◉ EXTRA  GPIO 33"]
+        end
     end
 
-    subgraph BTN["Botones"]
-        UP["UP"]
-        DOWN["DOWN"]
-        LEFT["LEFT"]
-        RIGHT["RIGHT"]
-        SELECT["SELECT"]
-        EXTRA["EXTRA"]
+    subgraph FIRMWARE["💾 Firmware · pwned_rootedcon_2026_araintel.cpp"]
+        direction LR
+
+        subgraph VIEWS["Vistas"]
+            HOME["🏠 HOME\nSelección personaje"]
+            PET["🐾 PET\nTamagotchi"]
+            HACK["⚡ HACK MENU"]
+        end
+
+        subgraph HACKMENU["HACK MENU · 8 slots"]
+            direction TB
+            S0["0 · WIFI CFG\nPortal config AP"]
+            S1["1 · WIFI SCAN\nEscáner pasivo"]
+            S2["2 · TWIN DET\nDetector Evil Twin"]
+            S3["3 · EVILTWIN\nAP clonado + portal cautivo"]
+            S4["4 · WIFI DEAUTH\nFrames 802.11 deauth"]
+            S5["5–7 · CIFRADOR\nHASH · LOGS\nplaceholder"]
+        end
     end
 
-    ESP32 -->|GPIO 23| MOSI
-    ESP32 -->|GPIO 18| SCLK
-    ESP32 -->|GPIO 5| CS
-    ESP32 -->|GPIO 16| DC
-    ESP32 -->|GPIO 4| RST
-    ESP32 -->|GPIO 12| BL
-    ESP32 -->|GPIO 21| SCREEN_EN
-    ESP32 -->|GPIO 0| AUX_POWER
-    ESP32 -->|GPIO 27| UP
-    ESP32 -->|GPIO 15| DOWN
-    ESP32 -->|GPIO 25| LEFT
-    ESP32 -->|GPIO 26| RIGHT
-    ESP32 -->|GPIO 13| SELECT
-    ESP32 -->|GPIO 33| EXTRA
+    CPU --> DISPLAY
+    CPU --> BUTTONS
+    WIFI_HW --> S1
+    WIFI_HW --> S2
+    WIFI_HW --> S3
+    WIFI_HW --> S4
+    HACK --> HACKMENU
 
-    classDef esp fill:#0d1117,stroke:#58a6ff,color:#ffffff,stroke-width:3px;
-    classDef tft fill:#0f172a,stroke:#0ea5e9,color:#e0f2fe,stroke-width:2px;
-    classDef btn fill:#111827,stroke:#22c55e,color:#ecfdf5,stroke-width:2px;
+    classDef badge fill:#3b0764,stroke:#a855f7,color:#f3e8ff,stroke-width:2px
+    classDef esp fill:#0d1117,stroke:#58a6ff,color:#dbeafe,stroke-width:2px
+    classDef tft fill:#0c1a2e,stroke:#0ea5e9,color:#e0f2fe,stroke-width:2px
+    classDef btn fill:#0f1f0f,stroke:#22c55e,color:#dcfce7,stroke-width:2px
+    classDef fw fill:#1a0533,stroke:#7c3aed,color:#ede9fe,stroke-width:2px
+    classDef safe fill:#0c1a2e,stroke:#0ea5e9,color:#e0f2fe,stroke-width:1px
+    classDef warn fill:#1c0a00,stroke:#f97316,color:#fff7ed,stroke-width:1px
+    classDef ph fill:#111827,stroke:#374151,color:#6b7280,stroke-width:1px
 
-    class ESP32 esp;
-    class MOSI,SCLK,CS,DC,RST,BL,SCREEN_EN,AUX_POWER tft;
-    class UP,DOWN,LEFT,RIGHT,SELECT,EXTRA btn;
+    class BADGE badge
+    class CPU,FLASH,WIFI_HW,USB esp
+    class MOSI,SCLK,CS,DC,RST,BL,SCREN,AUXP tft
+    class BUP,BDOWN,BLEFT,BRIGHT,BSEL,BEXT btn
+    class HOME,PET,HACK,VIEWS,HACKMENU fw
+    class S0,S1,S2 safe
+    class S3,S4 warn
+    class S5 ph
 ```
 
 ---
