@@ -2018,7 +2018,7 @@ void loop() {
   else if (g_view == VIEW_HASH_TOOL)   handleHashToolInput();
   else if (g_view == VIEW_CIPHER_TOOL) handleCipherToolInput();
   else if (g_view == VIEW_LOGS_TOOL)   handleLogsToolInput();
-d  redraw();
+  redraw();
   if (!g_full_redraw) {
     if (g_view == VIEW_PET) updatePetView();
     else if (g_view == VIEW_HOME) updateHomeView();
